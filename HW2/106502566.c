@@ -11,6 +11,7 @@ struct NODE
     struct NODE* next;
 };
 typedef struct NODE node;
+
 //calucate function
 void getCoef(char*,node**);
 void polyAdd(node*,node*,node**);
