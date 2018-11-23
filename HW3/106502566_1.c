@@ -1,8 +1,6 @@
 #include<stdlib.h>
 #include<stdio.h>
-#define MAXN 100
-
-
+#define MAXN 250
 
 typedef struct NODE{
     struct NODE *leftchild;
