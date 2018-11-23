@@ -7,16 +7,15 @@
 typedef struct NODE{
     struct NODE *leftchild;
     struct NODE *rightchild;
-    struct TNODE *parent;
     int inf;
 }node;
 
 typedef struct NODE *nodeptr;
 nodeptr maketree(int);
 nodeptr getnode();
-void addtree(nodeptr,int);
+void addtree(node**,int);
 
-void change(char[],int[],nodeptr);
+void change(char[],int[],node**);
 void printPreorder(nodeptr);
 void printInorder(nodeptr);
 void printPostorder(nodeptr);
@@ -30,7 +29,7 @@ int main(){
         int digit = 0;
         nodeptr tree=NULL;
         scanf("%s",input);
-        change(input,number,tree);
+        change(input,number,&tree);
         printf("Preorder:");
         printPreorder(tree);
         printf("\n");
@@ -57,27 +56,33 @@ nodeptr getnode(){
     return p;
 }
 
-void change(char *input,int *number,nodeptr tree){
-    int i=0;
-    while(input!='\0'){
+void change(char *input,int *number,node** tree){
+    int i=0; 
+    while(input[i]!='\0'){
         int sign=0, c=0;
         if(input[i]=='-'){
             sign=1;
             i++;
         }
-        while(i!=',' && i!='\0'){
+        while(input[i]!=',' && input[i]!='\0'){
             c*=10;
             c+=(input[i]-'0');
             i++;
         }
+        if(input[i]!='\0')
+            i++;
         if(sign==1)
             c*=-1;
         addtree(tree,c);
     }
 }
-void addtree(nodeptr p , int x){
-    if(p==NULL){
-        
+void addtree(node **p , int x){
+    if((*p)==NULL){
+        *p=maketree(x);
+    }else if(x>=(*p)->inf){
+        addtree(&((*p)->rightchild),x);
+    }else if(x<(*p)->inf){
+        addtree(&((*p)->leftchild),x);
     }
 }
 void printPreorder(nodeptr p){
