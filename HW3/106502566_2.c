@@ -20,19 +20,20 @@ typedef struct NODE{
 typedef struct NODE *nodeptr;
 
 
-void count(int*,char*);
-nodeptr maketree(int);
+int count(int*,char*);
+nodeptr maketree(hnodeptr);
 nodeptr getnode();
 void addtree(node**,int);
 
 int main(){
     int n; 
     int Letter[52];
+    int letterCount=0;
     memset(Letter,0,sizeof(Letter));
     while(n--){
         char input[MAXN];
         scanf("%s",input);   
-        count(Letter,input);
+        letterCount+=count(Letter,input);
     }
     printf("Compression ratio: ");
 }
@@ -51,18 +52,22 @@ nodeptr getnode(){
     nodeptr p=(nodeptr)malloc(sizeof(node));
     return p;
 }
+
 hnodeptr gethnode(){
     hnodeptr p=(hnodeptr)malloc(sizeof(hnode));
     return p;
 }
-void count(int *Letter,char *input){
-        int i=0;
+int count(int *Letter,char *input){
+        int i=0,letterCount=0;
         while(input[i]!='\0'){
             if(input[i]>='a' && input[i]<='z'){
                 Letter[input[i]-'a'+26]+=1;
+                letterCount++;
             }else if(input[i]>='A' && input[i]<='Z'){
                 Letter[input[i]-'a']+=1;
+                letterCount++;
             }
             i++;
         }
+    return letterCount;
 }
