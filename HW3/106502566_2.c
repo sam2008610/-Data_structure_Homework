@@ -35,6 +35,7 @@ int main(){
         scanf("%s",input);   
         letterCount+=count(Letter,input);
     }
+    
     printf("Compression ratio: ");
 }
 nodeptr maketree(hnodeptr input){
