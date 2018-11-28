@@ -36,7 +36,7 @@ int main(){
     }
     printf("Compression ratio: ");
 }
-nodeptr maketree(int x){
+nodeptr maketree(hnodeptr input){
     nodeptr p;
     p=getnode();
     hnodeptr p2;
