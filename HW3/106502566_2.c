@@ -4,26 +4,29 @@
 #define MAXN 250
 #define letterMAX 30
 
+//節點資訊
 typedef struct HNODE{
     int weight;
     int lens;
-    char c[letterMAX];
+    int ch;
+    char *code;
 }hnode;
 typedef struct hnode *hnodeptr;
 hnodeptr gethnode();
-
+void inputcode(hnodeptr);
+//linked list 的 binary tree
 typedef struct NODE{
     struct NODE *leftchild;
     struct NODE *rightchild;
-    hnodeptr inf;
+    hnodeptr huffman;
 }node;
 typedef struct NODE *nodeptr;
-
-
-int count(int*,char*);
 nodeptr maketree(hnodeptr);
 nodeptr getnode();
-void addtree(node**,int);
+
+int count(int*,char*);
+void sort(int*,int);
+void makehuffmantree(int*,hnode*);
 
 int main(){
     int n; 
@@ -32,8 +35,12 @@ int main(){
     memset(Letter,0,sizeof(Letter));
     while(n--){
         char input[MAXN];
+        hnode Letterhnode[52];
         scanf("%s",input);   
         letterCount+=count(Letter,input);
+        sort(Letter,52);
+        makehuffmantree(Letter,Letterhnode);
+
     }
     
     printf("Compression ratio: ");
@@ -41,11 +48,9 @@ int main(){
 nodeptr maketree(hnodeptr input){
     nodeptr p;
     p=getnode();
-    hnodeptr p2;
-    p2=gethnode();
-    //未完
     p->leftchild=NULL;
     p->rightchild=NULL;
+    p->huffman=NULL;
     return p;
 }
 
@@ -72,4 +77,20 @@ int count(int *Letter,char *input){
             i++;
         }
     return letterCount;
+}
+
+void makehuffmantree(int *c,hnode *huff){
+    node h[100];//tired to write a structure
+    int front=0,rear=0;
+    int i=0;
+    for(i=0 ; i<52 ; i++){
+        if(c[i]==0){
+            continue;
+        }else{
+
+        }
+    }
+    while((front+1)%52==rear){
+
+    }
 }
