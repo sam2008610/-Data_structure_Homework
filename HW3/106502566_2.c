@@ -58,6 +58,7 @@ hnodeptr gethnode(){
     hnodeptr p=(hnodeptr)malloc(sizeof(hnode));
     return p;
 }
+
 int count(int *Letter,char *input){
         int i=0,letterCount=0;
         while(input[i]!='\0'){
