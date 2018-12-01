@@ -18,15 +18,16 @@ void inputcode(hnodeptr);
 typedef struct NODE{
     struct NODE *leftchild;
     struct NODE *rightchild;
-    hnodeptr huffman;
+    hnode *huffman;
 }node;
 typedef struct NODE *nodeptr;
 nodeptr maketree(hnodeptr);
 nodeptr getnode();
 
 int count(int*,char*);
-void sort(int*,int);
+void sortint(int*,int);
 void makehuffmantree(int*,hnode*);
+void insertqueue(node*,node,int,int)
 
 int main(){
     int n; 
@@ -38,7 +39,7 @@ int main(){
         hnode Letterhnode[52];
         scanf("%s",input);   
         letterCount+=count(Letter,input);
-        sort(Letter,52);
+        sortint(Letter,52);
         makehuffmantree(Letter,Letterhnode);
 
     }
@@ -80,17 +81,65 @@ int count(int *Letter,char *input){
 }
 
 void makehuffmantree(int *c,hnode *huff){
-    node h[100];//tired to write a structure
+    int queuelen=100;
+    node h[queuelen];//tired to write a structure
     int front=0,rear=0;
     int i=0;
     for(i=0 ; i<52 ; i++){
         if(c[i]==0){
             continue;
         }else{
+            h[front].huffman=huff+i;
+            huff[i].lens=1;
+            huff[i].weight=c[i];
+            huff[i].ch=i; 
+            rear=(rear+1)%queuelen;
+        }
+    }
+    while((front+1)%52!=rear){
+        node temp1=h[front];
+        node temp2=h[front+1];
+        node newnode;
+        newnode.leftchild=&temp1;
+        newnode.rightchild=&temp2;
+        (newnode.huffman)->weight=(temp1.huffman)->weight+(temp2.huffman)->weight;
+        (newnode.huffman)->lens=(temp1.huffman)->lens+(temp2.huffman)->lens;
+        front+=2;
+        insertqueue(h,newnode,front,rear);
+    }
+}
+
+void sortint(int *num,int length){
+    int i;
+    for(i=0; i<length ;i++){
+        int j;
+        for(j=0; j<length-1 ;j++){
+            if(num[j+1]<num[j]){
+                int temp=num[j+1];
+                num[j+1]=num[j];
+                num[j]=temp;
+            }
+        }
+    }
+}
+
+void insertqueue(node *q,node newnode,int front,int rear){
+    int flag=0;
+    node temp;
+    while(front!=rear){
+        if(flag==0){
+            if(q[front].huffman->weight <=newnode.huffman->weight && q[(front+1)%100].huffman->weight>newnode.huffman->weight){
+                if(q[front].huffman->lens<=newnode.huffman->lens && q[(front+1)%100].huffman->lens>newnode.huffman->lens){
+                    flag=1;
+                    temp=
+                }
+            }
+        }else{
 
         }
     }
-    while((front+1)%52==rear){
+} 
 
-    }
+void sorthnodeinlen(){
+
 }
