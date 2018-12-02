@@ -40,6 +40,13 @@ int main(){
     while(n--){
         char input[MAXN];
         scanf("%[^\n]",input);
+        // int j;
+        // for(j=0 ; j<MAXN ;j++){
+        //     scanf("%c",&input[j]);
+        //     if(input[j]=='\n'){
+        //         break;
+        //     }
+        // }
         letterCount+=count(Letter,input);
         
     }
