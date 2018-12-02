@@ -34,12 +34,14 @@ int main(){
     int Letter[52];
     int letterCount=0;
     hnode Letterhnode[52];
+    scanf("%d",&n);
     setletterhnode(Letterhnode,52);
     memset(Letter,0,sizeof(Letter));
-    scanf("%d",&n);
-    while(n--){
+    
+    while(n){
         char input[MAXN];
-        scanf("%[^\n]",input);
+        gets(input);
+        //scanf("%[^\n]",input);
         // int j;
         // for(j=0 ; j<MAXN ;j++){
         //     scanf("%c",&input[j]);
@@ -48,7 +50,8 @@ int main(){
         //     }
         // }
         letterCount+=count(Letter,input);
-        
+        puts(input);
+        n--;
     }
     sortint(Letter,52);
     makehuffmantree(Letter,Letterhnode);
