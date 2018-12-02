@@ -11,9 +11,8 @@ typedef struct HNODE{
     int ch;
     char *code;
 }hnode;
-typedef struct hnode *hnodeptr;
-hnodeptr gethnode();
-void inputcode(hnodeptr);
+hnode* gethnode();
+void inputcode(hnode*);
 //linked list 的 binary tree
 typedef struct NODE{
     struct NODE *leftchild;
@@ -21,38 +20,32 @@ typedef struct NODE{
     hnode *huffman;
 }node;
 typedef struct NODE *nodeptr;
-nodeptr maketree(hnodeptr);
+nodeptr maketree(hnode*);
 nodeptr getnode();
 
 int count(int*,char*);
 void sortint(int*,int);
 void makehuffmantree(int*,hnode*);
-void insertqueue(node*,node,int,int)
+void insertqueue(node*,node,int,int);
+void setletterhnode(hnode*,int);
 
 int main(){
     int n; 
     int Letter[52];
     int letterCount=0;
+    hnode Letterhnode[52];
+    setletterhnode(Letterhnode,52);
     memset(Letter,0,sizeof(Letter));
+    scanf("%d",&n);
     while(n--){
         char input[MAXN];
-        hnode Letterhnode[52];
-        scanf("%s",input);   
+        scanf("%[^\n]",input);
         letterCount+=count(Letter,input);
-        sortint(Letter,52);
-        makehuffmantree(Letter,Letterhnode);
-
+        
     }
-    
+    sortint(Letter,52);
+    makehuffmantree(Letter,Letterhnode);
     printf("Compression ratio: ");
-}
-nodeptr maketree(hnodeptr input){
-    nodeptr p;
-    p=getnode();
-    p->leftchild=NULL;
-    p->rightchild=NULL;
-    p->huffman=NULL;
-    return p;
 }
 
 nodeptr getnode(){
@@ -60,8 +53,8 @@ nodeptr getnode(){
     return p;
 }
 
-hnodeptr gethnode(){
-    hnodeptr p=(hnodeptr)malloc(sizeof(hnode));
+hnode* gethnode(){
+    hnode* p=(hnode*)malloc(sizeof(hnode));
     return p;
 }
 
@@ -107,6 +100,7 @@ void makehuffmantree(int *c,hnode *huff){
         front+=2;
         insertqueue(h,newnode,front,rear);
     }
+    
 }
 
 void sortint(int *num,int length){
@@ -126,20 +120,31 @@ void sortint(int *num,int length){
 void insertqueue(node *q,node newnode,int front,int rear){
     int flag=0;
     node temp;
-    while(front!=rear){
+    while(((front+2)%100)!=rear){
         if(flag==0){
             if(q[front].huffman->weight <=newnode.huffman->weight && q[(front+1)%100].huffman->weight>newnode.huffman->weight){
                 if(q[front].huffman->lens<=newnode.huffman->lens && q[(front+1)%100].huffman->lens>newnode.huffman->lens){
                     flag=1;
-                    temp=
+                    temp = newnode;
                 }
             }
         }else{
-
+            q[front]=temp;
+            temp=q[(front+1)%100];
         }
+        front=(front+1)%100;
+    }
+    if(flag==0){
+        q[rear]=temp;
+    }else{
+        q[rear]=newnode;
     }
 } 
 
-void sorthnodeinlen(){
-
+void setletterhnode(hnode* n,int leng){
+    int i;
+    for(int i=0;i<leng;i++){
+        n[i].lens=0;
+        n[i].weight=0;
+    }
 }
