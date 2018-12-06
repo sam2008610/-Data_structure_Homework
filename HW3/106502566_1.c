@@ -13,7 +13,7 @@ nodeptr maketree(int);
 nodeptr getnode();
 void addtree(node**,int);
 
-void change(char[],int[],node**);
+void change(char[],node**);
 void printPreorder(nodeptr);
 void printInorder(nodeptr);
 void printPostorder(nodeptr);
@@ -23,11 +23,9 @@ int main(){
     scanf("%d",&n);
     while(n--){
         char input[MAXN];
-        int number[MAXN];
-        int digit = 0;
         nodeptr tree=NULL;
         scanf("%s",input);
-        change(input,number,&tree);
+        change(input,&tree);
         printf("Preorder:");
         printPreorder(tree);
         printf("\n");
@@ -54,7 +52,7 @@ nodeptr getnode(){
     return p;
 }
 
-void change(char *input,int *number,node** tree){
+void change(char *input,node** tree){
     int i=0; 
     while(input[i]!='\0'){
         int sign=0, c=0;
@@ -76,10 +74,10 @@ void change(char *input,int *number,node** tree){
 }
 void addtree(node **p , int x){
     if((*p)==NULL){
-        *p=maketree(x);
-    }else if(x>=(*p)->inf){
+        *p=maketree(x);  
+    }else if(x>(*p)->inf){
         addtree(&((*p)->rightchild),x);
-    }else if(x<(*p)->inf){
+    }else if(x<=(*p)->inf){
         addtree(&((*p)->leftchild),x);
     }
 }
