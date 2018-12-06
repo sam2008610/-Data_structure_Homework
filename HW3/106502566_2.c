@@ -27,7 +27,7 @@ void count(int*,char);
 void sortint(int*,int);
 node* makehuffmantree(int*,hnode*);
 void setletterhnode(hnode*,int);
-void runnin(nodeptr);
+void runnin(nodeptr,char*,int,char);
 
 int main(){
     int n; 
@@ -50,7 +50,10 @@ int main(){
         }
     }
     sortint(Letter,52);
-    makehuffmantree(Letter,Letterhnode);
+    nodeptr root=makehuffmantree(Letter,Letterhnode);
+    runnin(root,NULL,0,'\0');
+    sorthnode(Letterhnode,52);
+    
     printf("Compression ratio: ");
 }
 
@@ -97,6 +100,8 @@ node* makehuffmantree(int *c,hnode *huff){
         newnode.rightchild=&temp2;
         (newnode.huffman)->weight=(temp1.huffman)->weight+(temp2.huffman)->weight;
         (newnode.huffman)->lens=(temp1.huffman)->lens+(temp2.huffman)->lens;
+        newnode.huffman->code=(char*)malloc(sizeof(char)*100);
+        memset(newnode.huffman->code,'\0',sizeof(char)*100);
         front+=2;
         //insert new node to the queue
         int flag=0;
@@ -151,5 +156,15 @@ void setletterhnode(hnode* n,int leng){
 }
 
 void runnin(nodeptr p,char* parentcode,int codelong,char now){
-
+    if(parentcode!=NULL){
+        int i;
+        for(i=0; i <codelong ; i++){
+            p->huffman->code[i]=parentcode[i];
+        }
+        p->huffman->code[i]=parentcode[i];
+    }
+    if(p->leftchild &&p->rightchild){
+        runnin(p->leftchild,p->huffman->code,++codelong,'0');
+        runnin(p->rightchild,p->huffman->code,++codelong,'1');
+    }
 }
