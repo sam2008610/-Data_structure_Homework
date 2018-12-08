@@ -1,170 +1,243 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#define MAXN 250
-#define letterMAX 30
+#define max_heap 100
+#define max_code_size 100
 
-//node information
-typedef struct HNODE{
-    int weight; // frequency
-    int lens; // how long
-    int ch; //letter's ascii code
-    char *code; // huffman code
-}hnode;
-hnode* gethnode();
-void inputcode(hnode*);
-//linked list's binary tree
 typedef struct NODE{
-    struct NODE *leftchild;
-    struct NODE *rightchild;
-    hnode *huffman;
+    int weight;
+    char character;
+    struct NODE* left,*right;
+    int *code;
+    int codesize;
 }node;
-typedef struct NODE *nodeptr;
-nodeptr maketree(hnode*);
-nodeptr getnode();
 
-void count(int*,char);
-void sortint(int*,int);
-node* makehuffmantree(int*,hnode*);
-void setletterhnode(hnode*,int);
-void runnin(nodeptr,char*,int,char);
+typedef struct HEAPNODE{
+    int size ;
+    int space;
+    node **array;
+}heapnode;
 
-int main(){
-    int n; 
-    int Letter[52];
+node* newNode(char c, int w){
+    node* newNode=(node*)malloc(sizeof(node));
+    newNode->weight=w;
+    newNode->character=c;
+    newNode->left=NULL;
+    newNode->right=NULL;
+    newNode->code=(int*)malloc(max_code_size*sizeof(int));
+    newNode->codesize=0;
+    return newNode;
+}
+
+heapnode* newHeap(int s){
+    heapnode *heap =(heapnode*)malloc(sizeof(heap));
+    heap->space=s;
+    heap->array=(node**)malloc(heap->space* sizeof(node*));
+    heap->size=0;
+    return heap;
+}
+
+void swapnode(node** a,node** b){
+    node* temp=*a;
+    *a=*b;
+    *b=temp;
+}
+
+void heapSort(heapnode* heap,int now){
+    int small=now;
+    int l=2*now+1;
+    int r=2*now+2;
+    if ((l < heap->size) && (heap->array[l]->weight < heap->array[small]->weight) )
+    {
+        small = l;
+    }
+
+    if ((r < heap->size)&& (heap->array[r]->weight < heap->array[small]->weight))
+    {
+        small = r;
+    }
+
+    if (small != now)
+    {
+        swapnode(&heap->array[small], &heap->array[now]);
+        heapSort(heap, small);
+    }
+}
+void heapSortByCodeLength(heapnode* heap,int now){
+    int small=now;
+    int l=2*now+1;
+    int r=2*now+2;
+    if ((l < heap->size) && (heap->array[l]->codesize < heap->array[small]->codesize ))
+    {
+        if(heap->array[l]->character < heap->array[small]->character )
+            small = l;
+    }
+
+    if ((r < heap->size)&& (heap->array[r]->codesize  < heap->array[small]->codesize ))
+    {
+        if(heap->array[r]->character < heap->array[small]->character )
+            small = r;
+    }
+
+    if (small != now)
+    {
+        swapnode(&heap->array[small], &heap->array[now]);
+        heapSort(heap, small);
+    }
+}
+void insertHeap(heapnode* heap,node* newnode){
+    ++heap->size; //???
+    int i=heap->size-1;
+    while((i>1)&& newnode->weight<heap->array[(i-1)/2]->weight){
+        heap->array[i] = heap->array[(i-1)/2];
+        i = (i-1)/2;
+    }
+    heap->array[i]=newnode;
+}
+
+void buildHeap(heapnode* heap){
+    int s = heap->size - 1;
+    int i;
+    for (i = (s-1)/2; i >= 0 ; --i)
+    {
+        heapSort(heap, i);
+    }
+}
+void printArray(int arr[],int size){
+    int i;
+    for(i=0;i<size;i++){
+        printf("%d",arr[i]);
+    }
+}
+node* pop(heapnode* heap){
+    node* temp = heap->array[0];
+    heap->array[0] = heap->array[heap->size - 1];
+    --heap->size;
+    heapSort(heap,0);
+    return temp;
+}
+heapnode* createAndBuildHHeap(char character[], int fre[], int size)
+{
+    int i;
+    heapnode* heap = newHeap(size);
+    for (i = 0; i < size; ++i)
+        heap->array[i] = newNode(character[i], fre[i]);
+    heap->size = size;
+    buildHeap(heap);
+    return heap;
+}
+node* buildHuffmanTree(char character[], int fre[], int size)
+{
+    node *l, *r, *top;
+    heapnode* heap = createAndBuildHHeap(character, fre, size);
+
+    while (heap->size!=1)
+    {
+        l = pop(heap);
+        r = pop(heap);
+        top = newNode('$', l->weight + r->weight);
+        top->left = l;
+        top->right = r;
+        top->codesize=0;
+        insertHeap(heap, top);
+    }
+    return pop(heap);
+}
+int count(int Letter[],char input){
+    int coun=0;
+
+    return coun;
+}
+int printCodes(node* root, int arr[], int top,heapnode* heap)
+{
+    int coun=0;
+    if (root->left)
+    {
+        arr[top] = 0;
+        coun+=printCodes(root->left, arr, top + 1,heap);
+    }
+
+    if (root->right)
+    {
+        arr[top] = 1;
+        coun+=printCodes(root->right, arr, top + 1,heap);
+    }
+
+    if (root->left==NULL && root->right==NULL)
+    {
+        root->codesize=top;
+        int i;
+        for(i=0;i<top;i++){
+            root->code[i]=arr[i];
+        }
+        insertHeap(heap,root);
+        coun+=(root->codesize)*(root->weight);
+        return coun;
+    }
+}
+int makeHuffman(char character[],int Letter[],int size){
+    node* root = buildHuffmanTree(character, Letter, size);
+    int arr[max_heap], top = 0;
+    heapnode* heap=newHeap(max_heap);
+    int coun=0;
+    coun+=printCodes(root, arr, top,heap);
+    int s = heap->size - 1;
+    int i;
+    for (i = (s-1)/2; i >= 0 ; --i)
+        heapSortByCodeLength(heap,i);
+    for(i=0;i<heap->size;i++){
+        printf("%c : ",heap->array[i]->character);
+        printArray((heap->array[i]->code),heap->array[i]->codesize);
+        printf("\n");
+    }
+    return coun;
+}
+int readAndCount(int n,int Letter[],char cha[],int* size){
     int letterCount=0;
-    hnode Letterhnode[52];
-    scanf("%d",&n);
-    // initialize
-    setletterhnode(Letterhnode,52);
-    memset(Letter,0,sizeof(Letter));
-    // read
     int j;
+    int l[52]={0};
+    char ch[52];
     for(j=0;j<n+1;j++){
         char temp;
         while(scanf("%c",&temp)!=EOF){
             if(temp=='\n'){
                 break;
             }
-            count(Letter,temp);
-        }
-    }
-    sortint(Letter,52);
-    nodeptr root=makehuffmantree(Letter,Letterhnode);
-    runnin(root,NULL,0,'\0');
-    sorthnode(Letterhnode,52);
-    
-    printf("Compression ratio: ");
-}
-
-nodeptr getnode(){
-    nodeptr p=(nodeptr)malloc(sizeof(node));
-    return p;
-}
-
-hnode* gethnode(){
-    hnode* p=(hnode*)malloc(sizeof(hnode));
-    return p;
-}
-
-void count(int *Letter,char input){
-    if(input>='a' && input<='z'){
-        Letter[input-'a'+26]+=1;
-    }else if(input>='A' && input<='Z'){
-        Letter[input-'a']+=1;
-    }
-}
-
-node* makehuffmantree(int *c,hnode *huff){
-    int queuelen=100;
-    node h[queuelen];//tired to write a structure
-    int front=0,rear=0;// queue front and rear
-    int i=0;
-    //lord the times into hnode which
-    for(i=0 ; i<52 ; i++){
-        if(c[i]==0){
-            continue;
-        }else{
-            h[front].huffman=huff+i;
-            huff[i].lens=1;
-            huff[i].weight=c[i];
-            huff[i].ch=i; 
-            rear=(rear+1)%queuelen;
-        }
-    }
-    while((front+1)%52!=rear){
-        node temp1=h[front];
-        node temp2=h[front+1];
-        node newnode;
-        newnode.leftchild=&temp1;
-        newnode.rightchild=&temp2;
-        (newnode.huffman)->weight=(temp1.huffman)->weight+(temp2.huffman)->weight;
-        (newnode.huffman)->lens=(temp1.huffman)->lens+(temp2.huffman)->lens;
-        newnode.huffman->code=(char*)malloc(sizeof(char)*100);
-        memset(newnode.huffman->code,'\0',sizeof(char)*100);
-        front+=2;
-        //insert new node to the queue
-        int flag=0;
-        node temp;
-        int tempfront=front;
-        while(((tempfront+2)%100)!=rear){
-            if(flag==0){
-                if(h[tempfront].huffman->weight <=newnode.huffman->weight && h[(tempfront+1)%100].huffman->weight>newnode.huffman->weight){
-                    if(h[tempfront].huffman->lens<=newnode.huffman->lens && h[(tempfront+1)%100].huffman->lens>newnode.huffman->lens){
-                        flag=1;
-                        temp = newnode;
-                    }
-                }
-            }else{
-                h[tempfront]=temp;
-                temp=h[(tempfront+1)%100];
-            }
-            tempfront=(tempfront+1)%100;
-        }
-        if(flag==0){
-            h[rear]=temp;
-        }else{
-            h[rear]=newnode;
-        }
-    }
-    nodeptr root=&h[front]; // return the root
-    return root;
-}
-
-void sortint(int *num,int length){
-    int i;
-    for(i=0; i<length ;i++){
-        int j;
-        for(j=0; j<length-1 ;j++){
-            if(num[j+1]<num[j]){
-                int temp=num[j+1];
-                num[j+1]=num[j];
-                num[j]=temp;
+            if(temp>='a' && temp<='z'){
+                l[temp-'a'+26]+=1;
+                ch[temp-'a'+26]=temp;
+                letterCount++;
+            }else if(temp>='A' && temp<='Z'){
+                l[temp-'A']+=1;
+                ch[temp-'A']=temp;
+                letterCount++;
             }
         }
     }
-}
-
-void setletterhnode(hnode* n,int leng){
-    int i;
-    for(int i=0;i<leng;i++){
-        n[i].lens=0;
-        n[i].weight=0;
-        n[i].code=(char*)malloc(sizeof(char)*50);
-        memset(n[i].code,'\0',sizeof(char)*50);
-    }
-}
-
-void runnin(nodeptr p,char* parentcode,int codelong,char now){
-    if(parentcode!=NULL){
-        int i;
-        for(i=0; i <codelong ; i++){
-            p->huffman->code[i]=parentcode[i];
+    int i,c=0;
+    for (i = 0; i < 52; i++)
+    {
+        if (l[i] != 0)
+        {
+            cha[c] = ch[i];
+            Letter[c] = l[i];
+            c++;
         }
-        p->huffman->code[i]=parentcode[i];
     }
-    if(p->leftchild &&p->rightchild){
-        runnin(p->leftchild,p->huffman->code,++codelong,'0');
-        runnin(p->rightchild,p->huffman->code,++codelong,'1');
-    }
+    *size=c;
+    return letterCount;
+}
+int main(){
+    int n,size;
+    int Letter[52]={0};
+    char cha[52];    
+    int letterCount=0;
+    scanf("%d",&n);
+    memset(Letter,0,sizeof(Letter));    
+    letterCount=readAndCount(n,Letter,cha,&size);
+    int coun=makeHuffman(cha,Letter,size);
+    printf("%d\n",coun);
+    double a=coun,b=letterCount*4;
+    printf("Compression ratio: %.2lf",a/b);
+    return 0;
 }
