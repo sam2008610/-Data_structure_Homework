@@ -64,44 +64,6 @@ void heapSort(heapnode* heap,int now){
         heapSort(heap, small);
     }
 }
-void heapSortcha(heapnode* heap,int now){
-    int small=now;
-    int l=2*now+1;
-    int r=2*now+2;
-    if ((l < heap->size) && ((heap->array[l]->weight < heap->array[small]->weight) ||((heap->array[l]->weight == heap->array[small]->weight) &&(heap->array[l]->character < heap->array[small]->character))))
-    {
-            small = l;
-    }
-
-    if ((r < heap->size)&& ((heap->array[r]->weight < heap->array[small]->weight)||((heap->array[r]->weight == heap->array[small]->weight)&&(heap->array[r]->character < heap->array[small]->character))))
-    {
-            small = r;
-    }
-    if (small != now)
-    {
-        swapnode(&heap->array[small], &heap->array[now]);
-        heapSortcha(heap, small);
-    }
-}
-void heapSortByCodeLength(heapnode* heap,int now){
-    int small=now;
-    int l=2*now+1;
-    int r=2*now+2;
-    if ((l < heap->size) && ((heap->array[l]->codesize < heap->array[small]->codesize )||((heap->array[l]->codesize == heap->array[small]->codesize )&&(heap->array[l]->character  < heap->array[small]->character ))))
-    {
-            small = l;
-    }
-
-    if ((r < heap->size)&& ((heap->array[r]->codesize  < heap->array[small]->codesize )||((heap->array[r]->codesize== heap->array[small]->codesize )&&(heap->array[r]->character < heap->array[small]->character ))))
-    {
-            small = r;
-    } 
-    if (small != now)
-    {
-        swapnode(&heap->array[small], &heap->array[now]);
-        heapSortByCodeLength(heap, small);
-    }
-}
 void insertHeap(heapnode* heap,node* newnode){
     ++heap->size; //???
     int i=heap->size-1;
@@ -122,15 +84,6 @@ void insertHeapBycode(heapnode* heap,node* newnode){
     heap->array[i]=newnode;
 }
 
-void insertHeapCha(heapnode* heap,node* newnode){
-    ++heap->size; //???
-    int i=heap->size-1;
-    while((i>1)&& (newnode->weight<heap->array[(i-1)/2]->weight|| (newnode->weight==heap->array[(i-1)/2]->weight&& newnode->character<heap->array[(i-1)/2]->character))){
-        heap->array[i] = heap->array[(i-1)/2];
-        i = (i-1)/2;
-    }
-    heap->array[i]=newnode;
-}
 void buildHeap(heapnode* heap){
     int s=heap->size;
     int i,j;
@@ -207,11 +160,7 @@ node* buildHuffmanTree(char character[], int fre[], int size)
     }
     return pop(heap);
 }
-int count(int Letter[],char input){
-    int coun=0;
 
-    return coun;
-}
 int printCodes(node* root, int arr[], int top,heapnode* heap)
 {
     int coun=0;
@@ -259,8 +208,6 @@ int makeHuffman(char character[],int Letter[],int size){
             }
         }
     }
-    //for (i = (s-1)/2; i >= 0 ; --i)
-        //heapSortByCodeLength(heap,i);
     for(i=0;i<heap->size;i++){
         printf("%c : ",heap->array[i]->character);
         printArray((heap->array[i]->code),heap->array[i]->codesize);
