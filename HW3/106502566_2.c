@@ -181,7 +181,7 @@ int printCodes(node* root, int arr[], int top,heapnode* heap)
         root->codesize=top;
         int i;
         for(i=0;i<top;i++){
-            *(root->code+i)=arr[i];
+            root->code[i]=arr[i];
         }
         insertHeapBycode(heap,root);
         coun+=(root->codesize)*(root->weight);
@@ -209,7 +209,7 @@ int makeHuffman(char character[],int Letter[],int size){
         }
     }
     for(i=0;i<heap->size;i++){
-        printf("%c : ",heap->array[i]->character);
+        printf("%c: ",heap->array[i]->character);
         printArray((heap->array[i]->code),heap->array[i]->codesize);
         printf("\n");
     }
