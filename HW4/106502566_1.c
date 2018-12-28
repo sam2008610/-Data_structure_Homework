@@ -33,8 +33,7 @@ int read(int num[]){
     }
     return coun;
 }
-void merge(int arr[], int l, int m, int r)
-{
+void merge(int arr[], int l, int m, int r){
     int i, j, k;
     int n1 = m - l + 1;
     int n2 =  r - m;
@@ -45,31 +44,24 @@ void merge(int arr[], int l, int m, int r)
         R[j] = arr[m + 1+ j];
     i = 0;
     j = 0; k = l;
-    while (i < n1 && j < n2)
-    {
-        if (L[i] <= R[j])
-        {
+    while (i < n1 && j < n2){
+        if (L[i] <= R[j]){
             arr[k] = L[i];
             i++;
         }
-        else
-        {
+        else{
             arr[k] = R[j];
             j++;
         }
         k++;
     }
-    while (i < n1)
-    {
+    while (i < n1){
         arr[k] = L[i];
-        i++;
-        k++;
+        k++;i++;
     }
-    while (j < n2)
-    {
+    while (j < n2){
         arr[k] = R[j];
-        j++;
-        k++;
+        k++;j++;
     }
 }
 void mergeSort(int arr[], int left, int right)
