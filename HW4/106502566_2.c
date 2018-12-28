@@ -3,7 +3,7 @@
 #include<string.h>
 #define Max_size 30
 #define Max_char 150
-
+#define Max_int 0x3f3f3f3f
 int read(int gra[]){
     int size;
     scanf("%d",&size);
@@ -34,11 +34,21 @@ int read(int gra[]){
     return size;
 }
 void primsalgo(int gra[],int spanning[],int size){
-    int visited[Max_size],vistedcoun=0;
+    int visited[Max_size],vistedcoun=0,parent[Max_size];
     memset(visited,0,Max_size);
     visited[0]=1;
     while(size!=vistedcoun){
-        
+        int minedge=Max_int;
+        int i,j,si,sj;
+        for(i=0;i<size;i++){
+            if(visited[i]==1)continue;
+            for(j=0;j<size;j++){
+                if(gra[i*size+j]!=0 && visited[j]==0 && gra[i*size+j]<minedge){
+                    minedge=gra[i*size+j];
+                    si=i;sj=j;
+                }                                    
+            }
+        }
     } 
 }
 int main(){
@@ -46,8 +56,10 @@ int main(){
     scanf("%d",&cases);
     while(cases--){
         int gra[Max_size*Max_size],spanning[Max_size*Max_size];
+        memset(gra,0,Max_size*Max_size);
+        memset(spanning,0,Max_size*Max_size);
         int size=read(gra);
-        primsalgo(gra,,spanning,size);
+        primsalgo(gra,spanning,size);
     }
     
 }
