@@ -33,7 +33,7 @@ int read(int num[]){
     }
     return coun;
 }
-void merge(int arr[], int l, int m, int r){
+void merge(int arr[],int l,int m,int r){
     int i, j, k;
     int n1 = m - l + 1;
     int n2 =  r - m;
@@ -48,8 +48,7 @@ void merge(int arr[], int l, int m, int r){
         if (L[i] <= R[j]){
             arr[k] = L[i];
             i++;
-        }
-        else{
+        }else{
             arr[k] = R[j];
             j++;
         }
