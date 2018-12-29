@@ -45,7 +45,7 @@ int read(int gra[]){
     return size;
 }
 void primsalgo(int gra[],int spanning[],int size){
-    int visited[Max_size],vistedcoun=0,parent[Max_size];
+    int visited[Max_size],vistedcoun=0;
     memset(visited,0,Max_size);
     visited[0]=1;
     while((size-1)!=vistedcoun){
@@ -64,7 +64,6 @@ void primsalgo(int gra[],int spanning[],int size){
         gra[si*size+sj]=gra[sj*size+si]=0;
         spanning[si*size+sj]=minedge;
         visited[sj]=1;
-        parent[sj]=si;
         printf("%c-%c %d\n",si+'A',sj+'A',minedge);        
     } 
 }
