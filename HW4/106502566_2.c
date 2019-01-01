@@ -14,24 +14,29 @@
 //     }
     
 // }
-int read(int gra[]){
+int read(int gra[])
+{
     int size;
     scanf("%d",&size);
     int i=size,j=0;
-    while(i--){
+    while(i--)
+    {
         int k=0;
         char input[Max_char];
         scanf("%s",input);
-        while(input[k]!='\0'){
+        while(input[k]!='\0')
+        {
             int sign=0, c=0;
-            if(input[k]=='-'){
-            sign=1;
-            k++;
+            if(input[k]=='-')
+            {
+                sign=1;
+                k++;
             }
-            while(input[k]!=',' && input[k]!='\0'){
-            c*=10;
-            c+=(input[k]-'0');
-            k++;
+            while(input[k]!=',' && input[k]!='\0')
+            {
+                c*=10;
+                c+=(input[k]-'0');
+                k++;
             }
             if(input[k]!='\0')
                 k++;
@@ -44,17 +49,22 @@ int read(int gra[]){
     }
     return size;
 }
-void primsalgo(int gra[],int spanning[],int size){
+void primsalgo(int gra[],int spanning[],int size)
+{
     int visited[Max_size],vistedcoun=0;
     memset(visited,0,Max_size);
     visited[0]=1;
-    while((size-1)!=vistedcoun){
+    while((size-1)!=vistedcoun)
+    {
         int minedge=Max_int;
         int i,j,si,sj;
-        for(i=0;i<size;i++){
+        for(i=0;i<size;i++)
+        {
             if(visited[i]==0)continue;
-            for(j=0;j<size;j++){
-                if(gra[i*size+j]!=0 && visited[j]==0 && gra[i*size+j]<minedge){
+            for(j=0;j<size;j++)
+            {
+                if(gra[i*size+j]!=0 && visited[j]==0 && gra[i*size+j]<minedge)
+                {
                     minedge=gra[i*size+j];
                     si=i;sj=j;
                 }                                    
@@ -71,7 +81,8 @@ int main(){
     int cases;
     scanf("%d",&cases);
     int i=cases;
-    while(i--){
+    while(i--)
+    {
         int gra[Max_size*Max_size],spanning[Max_size*Max_size];
         memset(gra,0,Max_size*Max_size);
         memset(spanning,0,Max_size*Max_size);
